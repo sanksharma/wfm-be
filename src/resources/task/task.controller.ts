@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import AWS from "aws-sdk";
+import webpush from "web-push";
 
 type Task = {
   id: number;
@@ -141,4 +142,28 @@ export const reset = (request: Request, response: Response) => {
   tasks = [...initialTasks];
 
   return response.status(200).json({ tasks });
+};
+
+export const notify = (request: Request, response: Response) => {
+  const requestData = request.body;
+  const subscription = requestData.subObj;
+  const checked = requestData.checked;
+  const notificationPayload = JSON.stringify({
+    notification: {
+      title: "New Message",
+
+      body: `${checked ? "Task marked Done!" : "Task marked Pending!"}`,
+
+      icon: "/path/to/icon.png",
+    },
+  });
+
+  webpush
+    .sendNotification(subscription, notificationPayload)
+    .then((respo) => {})
+    .catch((error) => {
+      console.error("Error sending push notification:", error);
+    });
+
+    return response.status(200).json({message: "Notification sent successfully."});
 };
