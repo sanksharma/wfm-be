@@ -54,12 +54,10 @@ const tasks: Task[] = [
   },
 ];
 
-export const getMany = (request: Request, response: Response) => {
-  setTimeout(() => {
-    response.status(200).json({
-      tasks,
-    });
-  }, 2000);
+export const getMany = (_request: Request, response: Response) => {
+  return response.status(200).json({
+    tasks,
+  });
 };
 
 export const createOne = (request: Request, response: Response) => {
