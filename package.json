@@ -19,7 +19,6 @@
     "nodemon": "^2.0.15",
     "prettier": "^2.6.0",
     "prettier-plugin-prisma": "^3.11.0",
-    "prisma": "^3.11.0",
     "ts-node": "^10.7.0",
     "typescript": "^4.6.2"
   },
@@ -27,6 +26,7 @@
     "@prisma/client": "^3.11.0",
     "aws-sdk": "^2.1401.0",
     "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
     "express": "^4.17.3"
   }
 }
