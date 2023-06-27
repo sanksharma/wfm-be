@@ -13,7 +13,7 @@ type Task = {
 
 type RequestTask = Omit<Task, "id">;
 
-const tasks: Task[] = [
+const initialTasks: Task[] = [
   {
     id: 1,
     desc: "Check expiry date of products in Aisle S-002",
@@ -53,6 +53,8 @@ const tasks: Task[] = [
     status: "INCOMPLETE",
   },
 ];
+
+let tasks = [...initialTasks];
 
 export const getMany = (_request: Request, response: Response) => {
   return response.status(200).json({
@@ -133,4 +135,10 @@ export const updateOne = (request: Request, response: Response) => {
   tasks[idx] = updatedTask;
 
   return response.status(200).json({ task: updatedTask });
+};
+
+export const reset = (request: Request, response: Response) => {
+  tasks = [...initialTasks];
+
+  return response.status(200).json({ tasks });
 };
