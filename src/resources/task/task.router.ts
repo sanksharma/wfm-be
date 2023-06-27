@@ -7,6 +7,6 @@ router.get("/", getMany);
 router.post("/", createOne);
 router.put("/", updateOne);
 router.get("/reset", reset);
-router.get("/notify", notify);
+router.post("/notify", notify);
 
 export default router;

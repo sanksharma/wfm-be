@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import AWS from "aws-sdk";
-import webpush from "web-push";
+import webpush, { WebPushError } from "web-push";
 
 type Task = {
   id: number;
@@ -144,26 +144,31 @@ export const reset = (request: Request, response: Response) => {
   return response.status(200).json({ tasks });
 };
 
-export const notify = (request: Request, response: Response) => {
-  const requestData = request.body;
-  const subscription = requestData.subObj;
-  const checked = requestData.checked;
+export const notify = async (request: Request, response: Response) => {
+  const { subscription, checked } = request.body;
+
   const notificationPayload = JSON.stringify({
     notification: {
       title: "New Message",
-
       body: `${checked ? "Task marked Done!" : "Task marked Pending!"}`,
-
       icon: "/path/to/icon.png",
     },
   });
 
-  webpush
-    .sendNotification(subscription, notificationPayload)
-    .then((respo) => {})
-    .catch((error) => {
-      console.error("Error sending push notification:", error);
-    });
+  try {
+    const sendResult = await webpush.sendNotification(
+      subscription,
+      notificationPayload
+    );
 
-    return response.status(200).json({message: "Notification sent successfully."});
+    return response
+      .status(200)
+      .json({ message: "Notification sent successfully." });
+  } catch (error) {
+    if (error instanceof WebPushError) {
+      return response.status(error.statusCode).json({ message: error.body });
+    }
+
+    return response.status(500).json({ message: "Something went wrong. " });
+  }
 };
