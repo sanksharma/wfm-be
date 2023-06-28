@@ -155,11 +155,25 @@ export const notify = async (request: Request, response: Response) => {
     },
   });
 
+  const vapidKeys = {
+    publicKey:
+      "BBZ-_LjVst1ZWLQQYIdLGBs4Ez_ApbNCQnOanFDBoT1AbJhYq7RovyWoo4BcJe8PCcswcCjwLckJ_1JSza-Ebfc",
+    privateKey: "pkytmRATUvrM-JnjvLGkDUZ9L5MbyIjoEmIHe-oMUxo",
+  };
+
+  webpush.setVapidDetails(
+    "mailto:jnarang@deloitte.com",
+    vapidKeys.publicKey,
+    vapidKeys.privateKey
+  );
+
   try {
     const sendResult = await webpush.sendNotification(
       subscription,
       notificationPayload
     );
+
+    console.log(">>>", sendResult);
 
     return response
       .status(200)
@@ -168,6 +182,8 @@ export const notify = async (request: Request, response: Response) => {
     if (error instanceof WebPushError) {
       return response.status(error.statusCode).json({ message: error.body });
     }
+
+    console.error("generic catch all error", error);
 
     return response.status(500).json({ message: "Something went wrong. " });
   }
